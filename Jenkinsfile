@@ -2,28 +2,31 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone repository') {
+        stage('Checkout') {
             steps {
+                // Checkout code from GitHub
                 git 'https://github.com/sekandarihamid/jenkins-python-app.git'
             }
         }
-
-        stage('Install dependencies') {
+        
+        stage('Install Dependencies') {
             steps {
-                sh 'python3 -m venv venv'
-                sh './venv/bin/pip install -r requirements.txt'
+                // Install Python dependencies from the requirements.txt file
+                sh 'pip install -r requirements.txt'
             }
         }
 
-        stage('Run tests') {
+        stage('Run Unit Tests') {
             steps {
-                sh './venv/bin/python -m unittest discover -s .'
+                // Run unit tests
+                sh 'python -m unittest discover'
             }
         }
     }
-
+    
     post {
         always {
+            // Save test results
             junit 'test-results.xml'
         }
     }
